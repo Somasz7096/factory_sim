@@ -29,6 +29,7 @@ class LabeledInput(QWidget):
     def __init__(
         self,
         label_text: str,
+        label_name=None,
         min_w=None,
         max_w=None,
         fixed_w=None,
@@ -39,6 +40,8 @@ class LabeledInput(QWidget):
         super().__init__()
 
         self.label = QLabel(label_text)
+        if label_name:
+            self.label.setObjectName(label_name)
         self.input = TextInput(
             min_w=min_w,
             max_w=max_w,

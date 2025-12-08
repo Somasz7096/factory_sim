@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFrame, QLabel, QPushButton, QLineEdit, QGridLayout
-from .custom_widgets import LabelInput
+from .custom_widgets import LabeledInput
 
 
 
@@ -62,7 +62,8 @@ class NewItem(QWidget):
         left_box.setColumnStretch(0,0)
         left_box.setColumnStretch(1,0)
 
-
+        labeled_input = LabeledInput("labeled input", label_name="labeled_input", min_w=50, max_w=250, max_length=16)
+        left_box.addWidget(labeled_input,5,1)
 
 
         right_box = QVBoxLayout()
