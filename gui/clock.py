@@ -9,8 +9,8 @@ import modules.clock
 class Clock(QWidget):
     def __init__(self):
         super().__init__()
-        # self.setWindowFlags(Qt.WindowType.Tool)
-        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+
+        # self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         self.initUI()
 
 

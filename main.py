@@ -96,7 +96,7 @@ class MainWindow(QMainWindow):
 
         # *--------------* PLACEHOLDERS *------------*
 
-        button_action = QAction(QIcon("gui/img/target.png"),"Target button", self)
+        button_action = QAction(QIcon("gui/icons/target.png"), "Target button", self)
         button_action.setCheckable(True)
         button_action.setStatusTip("This is target button")
         # button_action.triggered.connect(self.toolbar_button_clicked)
@@ -105,7 +105,7 @@ class MainWindow(QMainWindow):
 
         top_toolbar.addSeparator()
 
-        button_action2 = QAction(QIcon("gui/img/globe.png"), "Globe button", self)
+        button_action2 = QAction(QIcon("gui/icons/globe.png"), "Globe button", self)
         button_action2.setCheckable(True)
         button_action2.setStatusTip("This is globe button")
         # button_action2.triggered.connect(self.toolbar_button_clicked)
@@ -178,14 +178,14 @@ class MainWindow(QMainWindow):
 
         # module1_button = QToolButton()
         # module1_button.setText("Module 1")
-        # module1_button.setIcon(QIcon("gui/img/address-book-blue.png"))
+        # module1_button.setIcon(QIcon("gui/icons/address-book-blue.png"))
         # module1_button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
         # module1_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         # module1_button.clicked.connect(self.init_module)
         #
         # module2_button = QToolButton()
         # module2_button.setText("Module 2")
-        # module2_button.setIcon(QIcon("gui/img/address-book.png"))
+        # module2_button.setIcon(QIcon("gui/icons/address-book.png"))
         # module2_button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
         # module2_button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         #

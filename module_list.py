@@ -1,13 +1,15 @@
 from gui.clock import Clock
 from gui.orders import Orders
+from gui.new_item import NewItem
 
 modules_list = [
     # ("Button text", icon path, Module Class)
-    ("Clock", "gui/img/address-book-blue.png", Clock),
-    ("Orders", "gui/img/address-book.png", Orders),
-    ("Warehouse", "gui/img/address-book-blue.png", Clock),
-    ("Items", "gui/img/address-book.png", Clock),
-    ("Packing", "gui/img/address-book-blue.png", Clock)
+    ("New item", "gui/icons/plus.png", NewItem),
+    ("Clock", "gui/icons/address-book-blue.png", Clock),
+    ("Orders", "gui/icons/address-book.png", Orders),
+    ("Warehouse", "gui/icons/address-book-blue.png", Clock),
+    ("Items", "gui/icons/address-book.png", Clock),
+    ("Packing", "gui/icons/address-book-blue.png", Clock)
 ]
 open_modules = {}
 module_counter = 0
