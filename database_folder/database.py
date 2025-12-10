@@ -2,12 +2,9 @@
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-try:
-    from .engine import SessionLocal
-    from .models import Item, Order
-except:
-        from engine import SessionLocal
-        from models import Item, Order
+from .engine import SessionLocal
+from .models import Item, Order
+
 
 
 session = SessionLocal()
@@ -41,32 +38,32 @@ session = SessionLocal()
 #         session.rollback()
 #         print(f"{data} already exists")
 
-def _print_results():
-    results = session.scalars(select(Item)).all()
-    for r in results:
-        print(r)
-
-
-
-
-def save(record):
-    try:
-        session.add(record)
-        session.commit()
-        _print_results()
-        print(f"{record} added")
-    except IntegrityError:
-        session.rollback()
-        print(f"{record} already exists")
-
-    except Exception as e:
-        print(f"save to db error - {e}")
-    session.close()
-
-def load(index: str, model):
-    try:
-        result = session.scalar(select(model).where(model.index == index))
-        return result
-    except Exception as e:
-        print(e)
+# def _print_results():
+#     results = session.scalars(select(Item)).all()
+#     for r in results:
+#         print(r)
+#
+#
+#
+#
+# def save(record):
+#     try:
+#         session.add(record)
+#         session.commit()
+#         _print_results()
+#         print(f"{record} added")
+#     except IntegrityError:
+#         session.rollback()
+#         print(f"{record} already exists")
+#
+#     except Exception as e:
+#         print(f"save to db error - {e}")
+#     session.close()
+#
+# def load(index: str, model):
+#     try:
+#         result = session.scalar(select(model).where(model.index == index))
+#         return result
+#     except Exception as e:
+#         print(e)
 

@@ -1,6 +1,5 @@
 import sys
 
-
 from PyQt6.QtGui import QPalette, QColor, QAction, QIcon, QKeySequence
 from PyQt6.QtCore import Qt, QThread, QObject, pyqtSignal, QTimer, QSize
 from PyQt6.QtWidgets import (QPushButton, QLabel, QWidget, QLineEdit,
@@ -30,7 +29,8 @@ class MainWindow(QMainWindow):
         self.is_running = False
 
 
-        self.open_modules = {}
+        self.running_ui_list = {}
+        self.running_logic_list = {}
         self.module_counters = 0
 
         self.initUI()
@@ -43,7 +43,8 @@ class MainWindow(QMainWindow):
 
 
     def initUI(self):
-        self.setMinimumSize(1200, 800)
+        self.setMinimumSize(400, 400)
+        self.setGeometry(1500,300,1200, 800)
         self.setWindowTitle("Taki mały program")
         self.init_layout()
         self.init_menubar()
@@ -126,13 +127,13 @@ class MainWindow(QMainWindow):
         sidebar_layout.setSpacing(2)
 
 
-        for text, icon_path, cls in modules_list:
+        for text, icon_path, ui_cls, logic_cls in modules_list:
             button = QToolButton()
             button.setText(text)
             button.setIcon(QIcon(icon_path))
             button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
             button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-            button.clicked.connect(partial(self.init_module, cls))
+            button.clicked.connect(partial(self.init_module, ui_cls, logic_cls))
             sidebar_layout.addWidget(button)
 
         sidebar_layout.addStretch()
@@ -150,27 +151,35 @@ class MainWindow(QMainWindow):
         module_layout.addWidget(test_label)
         self.hbox.addLayout(module_layout)
 
-    def init_module(self, module_cls):
+    def init_module(self, ui_cls, logic_cls):
         try:
-            module_counter = len(self.open_modules) + 1
+            module_counter = len(self.running_ui_list) + 1
 
-            name = f"{module_cls.__name__}[{module_counter}]"
+            name = f"{ui_cls.__name__}[{module_counter}]"
             # if name not in self.open_modules:
             print(f"Tworzę instancję: {name}")
-            self.open_modules[name] = module_cls()
-            print(self.open_modules)
 
-            cls_window = self.open_modules[name]
-            self.hbox.addWidget(cls_window)
-            self.hbox.setCurrentWidget(cls_window)
-            cls_window.show()
 
-            cls_window.destroyed.connect(lambda: self.desstroy_module(name))
+            ui_window = ui_cls()
+            self.running_ui_list[name] = ui_cls()
+            print(self.running_ui_list)
+
+
+            self.running_logic_list[name] = logic_cls(ui_window)
+
+            self.hbox.addWidget(ui_window)
+            self.hbox.setCurrentWidget(ui_window)
+
+            ui_window.show()
+            ui_window.destroyed.connect(lambda: self.destroy_module(name))
+
+
+
         except Exception as e:
             print(e)
 
-    def desstroy_module(self,name):
-        self.open_modules.pop(name)
+    def destroy_module(self,name):
+        self.running_ui_list.pop(name)
         print(f"{name} destroyed")
 
 
@@ -513,7 +522,7 @@ def force_light_theme(app: QApplication):
     # Główne kolory okien i tekstu
     palette.setColor(QPalette.ColorRole.Window, QColor(240, 240, 240))
     palette.setColor(QPalette.ColorRole.WindowText, Qt.GlobalColor.black)
-    palette.setColor(QPalette.ColorRole.Base, QColor(255, 255, 255))
+    palette.setColor(QPalette.ColorRole.Base, QColor(0, 120, 215))
     palette.setColor(QPalette.ColorRole.AlternateBase, QColor(230, 230, 230))
     palette.setColor(QPalette.ColorRole.ToolTipBase, QColor(255, 255, 220))
     palette.setColor(QPalette.ColorRole.ToolTipText, Qt.GlobalColor.black)
@@ -523,9 +532,12 @@ def force_light_theme(app: QApplication):
     palette.setColor(QPalette.ColorRole.BrightText, Qt.GlobalColor.red)
     palette.setColor(QPalette.ColorRole.PlaceholderText, QColor(122, 100, 100))
 
+
     # Kolory zaznaczeń
     palette.setColor(QPalette.ColorRole.Highlight, QColor(0, 120, 215))
-    palette.setColor(QPalette.ColorRole.HighlightedText, Qt.GlobalColor.white)
+    palette.setColor(QPalette.ColorRole.HighlightedText, QColor(0, 120, 215))
+    palette.setColor(QPalette.ColorRole.Base, QColor(0, 120, 215))
+
 
     # 3. Ustaw paletę aplikacji
     app.setPalette(palette)

@@ -1,14 +1,22 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import String, Integer, ForeignKey, UniqueConstraint
-try:
-    from engine import engine
-except:
-    from .engine import engine
+from .engine import engine
 
 
 class Base(DeclarativeBase):
     pass
 
+
+class Material(Base):
+    __tablename__ = "1000"
+
+    material_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str]
+    details: Mapped[str]
+    supplier: Mapped[int]
+
+    def __repr__(self):
+        return f"[{self.material_id}]: {self.name}, {self.details}, {self.supplier}"
 
 
 class Item(Base):
