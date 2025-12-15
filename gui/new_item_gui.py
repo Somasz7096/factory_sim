@@ -1,6 +1,8 @@
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFrame, QLabel, QPushButton, QLineEdit, QGridLayout
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFrame, QLabel, QPushButton, QLineEdit, QGridLayout, \
+    QComboBox
 from .custom_widgets import LabeledInput
+from database_folder import models
 
 
 
@@ -8,11 +10,14 @@ from .custom_widgets import LabeledInput
 
 class NewItemUI(QWidget):
 
-    testsignal = pyqtSignal()
+    testsignal = pyqtSignal(list)
 
 
     def __init__(self):
         super().__init__()
+        self.combined_data = []
+        self.data = {}
+        self.inputs = []
         self.initUI()
 
 
@@ -48,28 +53,31 @@ class NewItemUI(QWidget):
         header_label = QLabel("Add new item:")
         left_box.addWidget(header_label)
 
-        id_input = LabeledInput("Item ID", input_name="id_input", max_length=16, digits_only=True, placeholder="ID - opcjonalnie")
-        left_box.addWidget(id_input)
+        # options = ("1000",
+        #            "1100",
+        #            "1200",
+        #            "1300",
+        #            )
+        # self.type_input = LabeledInput("Item type",input_type="combo_box",combo_box_options=options, input_name="type_input", placeholder=" ")
+        # self.inputs.append(self.type_input)
+        # left_box.addWidget(self.type_input)
 
-        name_input = LabeledInput("Item name", input_name="name_input", max_length=16, placeholder="Nazwa")
-        left_box.addWidget(name_input)
+        self.id_input = LabeledInput("material_id", input_name="id_input", max_length=16, digits_only=True, placeholder="ID - opcjonalnie")
+        self.inputs.append(self.id_input)
+        left_box.addWidget(self.id_input)
 
-        details_input = LabeledInput("Item details", input_name="detail_input", max_length=16, placeholder="Szczegóły")
-        left_box.addWidget(details_input)
+        self.name_input = LabeledInput("name", input_name="name_input", max_length=16, placeholder="Nazwa")
+        self.inputs.append(self.name_input)
+        left_box.addWidget(self.name_input)
 
+        self.details_input = LabeledInput("details", input_name="details_input", max_length=16, placeholder="Szczegóły")
+        self.inputs.append(self.details_input)
+        left_box.addWidget(self.details_input)
 
-        options = ("1000 - surowce",
-                   "1100 - nośniki",
-                   "1200 - opakowania",
-                   "1300 - półwyroby",
-                   )
-        type_input = LabeledInput("Item type",input_type="combo_box",combo_box_options=options, input_name="type_input", placeholder=" ")
-        left_box.addWidget(type_input)
-
-
-        supplier_input = LabeledInput("Supplier ID", input_name="supplier_input", max_length=16, digits_only=True,
+        self.supplier_input = LabeledInput("supplier", input_name="supplier_input", max_length=16, digits_only=True,
                                 placeholder="ID dostawcy")
-        left_box.addWidget(supplier_input)
+        self.inputs.append(self.supplier_input)
+        left_box.addWidget(self.supplier_input)
 
         #---------> Cancel / Save buttons <-----------------#
 
@@ -104,8 +112,20 @@ class NewItemUI(QWidget):
 
     def test_signal_func(self):
         print("button clicked")
-        self.testsignal.emit()
+        for i in self.inputs:
+            # if not i.text() and str(i) == "Item ID":
+            #     continue
 
+            self.data[str(i)] = i.text()
+
+
+        self.combined_data.append(models.Material)
+        self.combined_data.append(self.data)
+
+
+
+
+        self.testsignal.emit(self.combined_data)
 
 
 

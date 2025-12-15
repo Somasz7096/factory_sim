@@ -92,9 +92,15 @@ class LabeledInput(QWidget):
 
         self.setLayout(layout)
 
+    def __repr__(self):
+        return f"{self.label.text()}"
+
     # pobieranie tekstu
     def text(self):
-        return self.input.text()
+        try:
+            return self.input.text()
+        except:
+            return self.input.currentText()
 
     # ustawianie tekstu
     def setText(self, value: str):
