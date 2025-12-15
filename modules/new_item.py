@@ -1,7 +1,7 @@
 from PyQt6.QtCore import QObject
 from sqlalchemy import select
 from database_folder.engine import SessionLocal
-from database_folder.models import Material
+from database_folder import models
 
 
 
@@ -33,7 +33,7 @@ class NewItem(QObject):
 
             '''dodaje rekord do tabeli, ** rozpakowuje słownik, 
                 klucze w słowniku muszę być równe nazwie kolumny'''
-            session.add(Material(**data))
+            session.add(model(**data))
             session.commit()
         except Exception as e:
             print(e)

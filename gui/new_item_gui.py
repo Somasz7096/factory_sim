@@ -113,18 +113,11 @@ class NewItemUI(QWidget):
     def test_signal_func(self):
         print("button clicked")
         for i in self.inputs:
-            # if not i.text() and str(i) == "Item ID":
-            #     continue
-
             self.data[str(i)] = i.text()
 
 
-        self.combined_data.append(models.Material)
+        self.combined_data.append(models.Warehouse1000)
         self.combined_data.append(self.data)
-
-
-
-
         self.testsignal.emit(self.combined_data)
 
 

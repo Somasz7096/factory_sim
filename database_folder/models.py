@@ -7,17 +7,26 @@ class Base(DeclarativeBase):
     pass
 
 
-class Material(Base):
-    __tablename__ = "1000"
+def warehouse_factory(table_name: str, class_name: str):
+    class Warehouse(Base):
+        __tablename__ = table_name
 
-    material_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str]
-    details: Mapped[str]
-    supplier: Mapped[int]
+        material_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+        name: Mapped[str]
+        details: Mapped[str]
+        supplier: Mapped[int]
 
-    def __repr__(self):
-        return f"[{self.material_id}]: {self.name}, {self.details}, {self.supplier}"
+        def __repr__(self):
+            return f"[{self.material_id}]: {self.name}, {self.details}, {self.supplier}"
 
+    Warehouse.__name__ = class_name
+    Warehouse.__qualname__ = class_name
+    Warehouse.__module__ = __name__
+    return Warehouse
+
+
+Warehouse_1000 = warehouse_factory("warehouse_1000", "Warehouse1000")
+Warehouse_1100 = warehouse_factory("warehouse_1100", "Warehouse1100")
 
 class Item(Base):
     __tablename__ = "items"
