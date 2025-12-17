@@ -13,7 +13,7 @@ class NewItem(QObject):
         super().__init__()
         print("New item module instanced")
 
-        ui.testsignal.connect(self.print)
+        ui.save_signal.connect(self.print)
 
     def print(self, combined_data):
         print(combined_data, sep='\n')

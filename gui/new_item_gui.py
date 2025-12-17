@@ -1,8 +1,12 @@
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFrame, QLabel, QPushButton, QLineEdit, QGridLayout, \
-    QComboBox
+import time
+from PyQt6.QtCore import Qt, pyqtSignal, QObject
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame, QLabel, QPushButton, QLineEdit, QGridLayout,
+                             QComboBox, QTabWidget, QGraphicsEffect)
+
 from .custom_widgets import LabeledInput
-from database_folder import models
+from database_folder.models import Materials
+import asyncio
 
 
 
@@ -10,7 +14,7 @@ from database_folder import models
 
 class NewItemUI(QWidget):
 
-    testsignal = pyqtSignal(list)
+    save_signal = pyqtSignal(list)
 
 
     def __init__(self):
@@ -53,18 +57,19 @@ class NewItemUI(QWidget):
         header_label = QLabel("Add new item:")
         left_box.addWidget(header_label)
 
-        # options = ("1000",
-        #            "1100",
-        #            "1200",
-        #            "1300",
-        #            )
-        # self.type_input = LabeledInput("Item type",input_type="combo_box",combo_box_options=options, input_name="type_input", placeholder=" ")
-        # self.inputs.append(self.type_input)
-        # left_box.addWidget(self.type_input)
-
-        self.id_input = LabeledInput("material_id", input_name="id_input", max_length=16, digits_only=True, placeholder="ID - opcjonalnie")
+        self.id_input = LabeledInput("material_id", input_name="id_input", max_length=16, digits_only=True,
+                                     placeholder="ID - opcjonalnie")
         self.inputs.append(self.id_input)
         left_box.addWidget(self.id_input)
+
+        options = ("1000",
+                   "1100",
+                   "1200",
+                   "1300",
+                   )
+        self.warehouse_input = LabeledInput("warehouse",input_type="combo_box",combo_box_options=options, input_name="warehouse_input", placeholder=" ")
+        self.inputs.append(self.warehouse_input)
+        left_box.addWidget(self.warehouse_input)
 
         self.name_input = LabeledInput("name", input_name="name_input", max_length=16, placeholder="Nazwa")
         self.inputs.append(self.name_input)
@@ -92,13 +97,13 @@ class NewItemUI(QWidget):
         left_box.addLayout(buttons_layout)
         buttons_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
-        save_button.clicked.connect(self.test_signal_func)
+        save_button.clicked.connect(self._save)
         cancel_button.clicked.connect(self.deleteLater)
 
         #----------> Error label <-----------------#
-        error_label = QLabel()
-        error_label.setAlignment(Qt.AlignmentFlag.AlignRight)
-        left_box.addWidget(error_label)
+        self.error_label = QLabel()
+        self.error_label.setAlignment(Qt.AlignmentFlag.AlignRight)
+        left_box.addWidget(self.error_label)
         left_box.addStretch()
 
         right_box = QVBoxLayout(right_frame)
@@ -110,19 +115,33 @@ class NewItemUI(QWidget):
         full_box.setStretch(1,4)
 
 
-    def test_signal_func(self):
-        print("button clicked")
+    def _save(self):
+        if not self._validate_inputs():
+            return
         for i in self.inputs:
             self.data[str(i)] = i.text()
 
 
-        self.combined_data.append(models.Warehouse1000)
+        self.combined_data.append(Materials)
         self.combined_data.append(self.data)
-        self.testsignal.emit(self.combined_data)
+        self.save_signal.emit(self.combined_data)
 
+    def _validate_inputs(self):
+        for i in self.inputs:
+            if i == self.id_input:
+                continue
+            elif not i.text() or i.text().isspace():
+                self._display_error(i)
+                self.combined_data = []
+                return False
+        return True
 
-
-
+    def _display_error(self, i: LabeledInput):
+        self.error_label.setText(f"{i} cannot be blank")
+        i.focus()
+        print(f"empty input for {i}")
+        time.sleep(1)
+        self.error_label.setText("")
 
 
 

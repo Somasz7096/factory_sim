@@ -33,6 +33,8 @@ class MainWindow(QMainWindow):
         self.running_logic_list = {}
         self.module_counters = 0
 
+        self.thread = QThread()
+
         self.initUI()
 
         # self.initThreads()
@@ -161,6 +163,7 @@ class MainWindow(QMainWindow):
 
 
             ui_window = ui_cls()
+            ui_window.moveToThread(self.thread)
             self.running_ui_list[name] = ui_cls()
             print(self.running_ui_list)
 
@@ -172,9 +175,6 @@ class MainWindow(QMainWindow):
 
             ui_window.show()
             ui_window.destroyed.connect(lambda: self.destroy_module(name))
-
-
-
         except Exception as e:
             print(e)
 

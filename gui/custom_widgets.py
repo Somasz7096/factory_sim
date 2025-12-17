@@ -107,6 +107,15 @@ class LabeledInput(QWidget):
         self.input.setText(value)
 
 
+    #focus po błędzie
+    def focus(self):
+        try:
+            self.input.showPopup()
+        except:
+            pass
+        self.input.setFocus()
+
+
 #---------> Przykład użycia <----------------#
 
 class ExampleForm(QWidget):
