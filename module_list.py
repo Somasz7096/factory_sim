@@ -1,8 +1,8 @@
 from gui.clock import Clock
 from gui.orders import Orders
 try:
-    from gui.new_item_gui import NewItemUI
-    from modules.new_item import NewItem
+    from gui.materials_ui import NewItemUI
+    from modules.materials import NewItem
 except Exception as e:
     print(e)
 

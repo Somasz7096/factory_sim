@@ -6,15 +6,14 @@ from PyQt6.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame, QLabel, 
 
 from .custom_widgets import LabeledInput
 from database_folder.models import Materials
-import asyncio
-
-
 
 
 
 class NewItemUI(QWidget):
 
     save_signal = pyqtSignal(list)
+    feedback_signal = pyqtSignal(str)
+
 
 
     def __init__(self):
@@ -101,9 +100,9 @@ class NewItemUI(QWidget):
         cancel_button.clicked.connect(self.deleteLater)
 
         #----------> Error label <-----------------#
-        self.error_label = QLabel()
-        self.error_label.setAlignment(Qt.AlignmentFlag.AlignRight)
-        left_box.addWidget(self.error_label)
+        self.feedback_label = QLabel()
+        self.feedback_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        left_box.addWidget(self.feedback_label)
         left_box.addStretch()
 
         right_box = QVBoxLayout(right_frame)
@@ -120,11 +119,10 @@ class NewItemUI(QWidget):
             return
         for i in self.inputs:
             self.data[str(i)] = i.text()
-
-
         self.combined_data.append(Materials)
         self.combined_data.append(self.data)
-        self.save_signal.emit(self.combined_data)
+        if self.save_signal.emit(self.combined_data):
+            self._display_confirmation()
 
     def _validate_inputs(self):
         for i in self.inputs:
@@ -137,17 +135,10 @@ class NewItemUI(QWidget):
         return True
 
     def _display_error(self, i: LabeledInput):
-        self.error_label.setText(f"{i} cannot be blank")
         i.focus()
-        print(f"empty input for {i}")
-        time.sleep(1)
-        self.error_label.setText("")
+        self.feedback_signal.emit(f"{i} cannot be blank")
 
-
-
-
-
-
-
-
-
+    def _display_confirmation(self):
+        self.feedback_signal.emit("New material added")
+        for i in self.inputs:
+            i.setText("")

@@ -104,7 +104,11 @@ class LabeledInput(QWidget):
 
     # ustawianie tekstu
     def setText(self, value: str):
-        self.input.setText(value)
+        try:
+            self.input.setCurrentIndex(0)
+        except:
+            self.input.setText(value)
+
 
 
     #focus po błędzie
@@ -112,8 +116,8 @@ class LabeledInput(QWidget):
         try:
             self.input.showPopup()
         except:
-            pass
-        self.input.setFocus()
+            self.input.setFocus()
+
 
 
 #---------> Przykład użycia <----------------#
@@ -136,3 +140,4 @@ class ExampleForm(QWidget):
         layout.addWidget(btn, 4, 0)
 
         self.setLayout(layout)
+

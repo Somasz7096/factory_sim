@@ -33,8 +33,6 @@ class MainWindow(QMainWindow):
         self.running_logic_list = {}
         self.module_counters = 0
 
-        self.thread = QThread()
-
         self.initUI()
 
         # self.initThreads()
@@ -157,29 +155,37 @@ class MainWindow(QMainWindow):
         try:
             module_counter = len(self.running_ui_list) + 1
 
-            name = f"{ui_cls.__name__}[{module_counter}]"
+            name = f"{logic_cls.__name__}[{module_counter}]"
             # if name not in self.open_modules:
-            print(f"Tworzę instancję: {name}")
+            print(f"New instance: {name}")
 
+            thread = QThread()
 
             ui_window = ui_cls()
-            ui_window.moveToThread(self.thread)
-            self.running_ui_list[name] = ui_cls()
-            print(self.running_ui_list)
+            logic = logic_cls(ui_window)
 
+            ui_window.moveToThread(thread)
+            logic.moveToThread(thread)
 
-            self.running_logic_list[name] = logic_cls(ui_window)
+            thread.start()
+
+            self.running_ui_list[name] = ui_window
+            self.running_logic_list[name] = logic
+            print(f"UI: {self.running_ui_list}\nLOGIC: {self.running_logic_list}")
 
             self.hbox.addWidget(ui_window)
             self.hbox.setCurrentWidget(ui_window)
 
             ui_window.show()
-            ui_window.destroyed.connect(lambda: self.destroy_module(name))
+            ui_window.destroyed.connect(lambda: self.destroy_module(name, thread))
         except Exception as e:
             print(e)
 
-    def destroy_module(self,name):
+    def destroy_module(self, name, thread):
         self.running_ui_list.pop(name)
+        self.running_logic_list.pop(name)
+        thread.quit()
+        thread.deleteLater()
         print(f"{name} destroyed")
 
 
