@@ -9,15 +9,13 @@ from .custom_widgets import LabeledInput
 
 
 class Materials_ui(QWidget):
-
     save_signal = pyqtSignal(dict)
-
-
     def __init__(self):
         super().__init__()
-        self.data = {}
-        self.inputs = []
         self.initUI()
+        self.new_item = None
+
+
 
     def initUI(self):
 
@@ -50,9 +48,9 @@ class Materials_ui(QWidget):
         top_box = QHBoxLayout(top_frame)
         top_box.setContentsMargins(0, 0, 0, 0)
 
-        left_box = QVBoxLayout(self.left_frame)
-        left_box.setContentsMargins(5, 5, 5, 5)
-        left_box.setSpacing(5)
+        self.left_box = QVBoxLayout(self.left_frame)
+        self.left_box.setContentsMargins(5, 5, 5, 5)
+        self.left_box.setSpacing(5)
         self.left_frame.setHidden(True)
 
         right_box = QVBoxLayout(right_frame)
@@ -79,7 +77,7 @@ class Materials_ui(QWidget):
 
         # *--------------* TOOLBAR PLACEHOLDERS *------------*
 
-        button_action = QAction(QIcon("gui/icons/target.png"), "Target button", self)
+        button_action = QAction(QIcon("gui/icons/plus.png"), "new button", self)
         button_action.setStatusTip("This is target button")
         button_action.triggered.connect(self.add_new)
         top_toolbar.addAction(button_action)
@@ -94,69 +92,87 @@ class Materials_ui(QWidget):
         # *--------------* TOOLBAR PLACEHOLDERS *------------*
 
 
-        #------------ LEFT BOX -----------------------#
+    def add_new(self):
+        pass
+        try:
+            self.new_item = NewItem(self.save_signal)
+            self.left_box.addWidget(self.new_item)
+            self.left_frame.show()
+        except Exception as e:
+            print(e)
 
-        header_label = QLabel("Add new item:")
-        left_box.addWidget(header_label)
+class NewItem(QWidget):
+    def __init__(self, save_signal):
+        super().__init__()
+        self.save_signal = save_signal
 
-        self.id_input = LabeledInput("material_id", input_name="id_input", max_length=16, digits_only=True,
-                                     placeholder="ID - opcjonalnie")
-        self.inputs.append(self.id_input)
-        left_box.addWidget(self.id_input)
+        self.data = {}
+        self.inputs = []
+        try:
+            layout = QVBoxLayout()
+            self.setLayout(layout)
+            header_label = QLabel("Add new item:")
+            layout.addWidget(header_label)
+            self.id_input = LabeledInput("material_id", input_name="id_input", max_length=16, digits_only=True,
+                                         placeholder="ID - opcjonalnie")
+            self.inputs.append(self.id_input)
+            layout.addWidget(self.id_input)
 
-        options = ("1000",
-                   "1100",
-                   "1200",
-                   "1300",
-                   )
-        self.warehouse_input = LabeledInput("warehouse",input_type="combo_box",combo_box_options=options, input_name="warehouse_input", placeholder=" ")
-        self.inputs.append(self.warehouse_input)
-        left_box.addWidget(self.warehouse_input)
+            options = ("1000",
+                       "1100",
+                       "1200",
+                       "1300",
+                       )
+            self.warehouse_input = LabeledInput("warehouse", input_type="combo_box", combo_box_options=options,
+                                                input_name="warehouse_input", placeholder=" ")
+            self.inputs.append(self.warehouse_input)
+            layout.addWidget(self.warehouse_input)
 
-        self.name_input = LabeledInput("name", input_name="name_input", max_length=16, placeholder="Nazwa")
-        self.inputs.append(self.name_input)
-        left_box.addWidget(self.name_input)
+            self.name_input = LabeledInput("name", input_name="name_input", max_length=16, placeholder="Nazwa")
+            self.inputs.append(self.name_input)
+            layout.addWidget(self.name_input)
 
-        self.details_input = LabeledInput("details", input_name="details_input", max_length=16, placeholder="Szczegóły")
-        self.inputs.append(self.details_input)
-        left_box.addWidget(self.details_input)
+            self.details_input = LabeledInput("details", input_name="details_input", max_length=16, placeholder="Szczegóły")
+            self.inputs.append(self.details_input)
+            layout.addWidget(self.details_input)
 
-        self.supplier_input = LabeledInput("supplier", input_name="supplier_input", max_length=16, digits_only=True,
-                                placeholder="ID dostawcy")
-        self.inputs.append(self.supplier_input)
-        left_box.addWidget(self.supplier_input)
+            self.supplier_input = LabeledInput("supplier", input_name="supplier_input", max_length=16, digits_only=True,
+                                               placeholder="ID dostawcy")
+            self.inputs.append(self.supplier_input)
+            layout.addWidget(self.supplier_input)
 
-        #---------> Cancel / Save buttons <-----------------#
+            # ---------> Cancel / Save buttons <-----------------#
 
-        buttons_layout = QHBoxLayout()
-        buttons_layout.setContentsMargins(5, 5, 5, 5)
-        buttons_layout.setSpacing(10)
-        cancel_button = QPushButton("Cancel")
-        save_button = QPushButton("Save")
-        save_button.setDefault(True)
-        buttons_layout.addWidget(cancel_button)
-        buttons_layout.addWidget(save_button)
-        left_box.addLayout(buttons_layout)
-        buttons_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
+            buttons_layout = QHBoxLayout()
+            buttons_layout.setContentsMargins(5, 5, 5, 5)
+            buttons_layout.setSpacing(10)
+            cancel_button = QPushButton("Cancel")
+            save_button = QPushButton("Save")
+            save_button.setDefault(True)
+            buttons_layout.addWidget(cancel_button)
+            buttons_layout.addWidget(save_button)
+            layout.addLayout(buttons_layout)
+            buttons_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
 
-        save_button.clicked.connect(self._save)
-        cancel_button.clicked.connect(self.deleteLater)
+            save_button.clicked.connect(self._save)
+            cancel_button.clicked.connect(self.deleteLater)
 
-        #----------> Feedback label <-----------------#
-        self.feedback_label = QLabel()
-        self.feedback_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        left_box.addWidget(self.feedback_label)
-        left_box.addStretch()
+            # ----------> Feedback label <-----------------#
+            self.feedback_label = QLabel()
+            self.feedback_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            layout.addWidget(self.feedback_label)
+            layout.addStretch()
+        except Exception as e:
+            print(e)
 
     def _save(self):
         if not self._validate_inputs():
             return
-        self.data = {} #czyszczenie z nieaktualnych danych
+        self.data = {}  # czyszczenie z nieaktualnych danych
         for i in self.inputs:
             self.data[str(i)] = i.text()
 
         self.save_signal.emit(self.data)
-
 
     def _validate_inputs(self):
         for i in self.inputs:
@@ -180,6 +196,3 @@ class Materials_ui(QWidget):
 
         for i in self.inputs:
             i.setText("")
-
-    def add_new(self):
-        self.left_frame.show()

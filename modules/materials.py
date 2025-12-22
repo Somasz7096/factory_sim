@@ -3,13 +3,14 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from database_folder.engine import SessionLocal
 from database_folder.models import Materials_db
+from gui.materials_ui import NewItem
 
 
 class Materials_logic(QObject):
     def __init__(self, ui):
         super().__init__()
         self.ui = ui
-        ui.save_signal.connect(self._save)
+        self.ui.save_signal.connect(self._save)
 
 
     def _save(self, data):
@@ -32,7 +33,7 @@ class Materials_logic(QObject):
 
                 data["material_id"] = assigned_id # aktualizuje słownik rekordu
 
-                self.ui.display_confirmation(data)
+                self.ui.new_item.display_confirmation(data)
 
             except IntegrityError:
                 session.rollback()

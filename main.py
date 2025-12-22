@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Taki mały program")
         self.init_layout()
         self.init_menubar()
-        self.init_toolbar()
+        # self.init_toolbar()
         self.setStatusBar(QStatusBar(self))
         self.init_list_menu()
         # self.init_module_field()
@@ -87,33 +87,33 @@ class MainWindow(QMainWindow):
         # *--------------* PLACEHOLDERS *------------*
 
 
-    def init_toolbar(self):
-
-        top_toolbar = QToolBar("Top toolbar")
-        top_toolbar.setIconSize(QSize(16, 16))
-        top_toolbar.setMovable(False)
-        top_toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
-        self.addToolBar(top_toolbar)
-
-        # *--------------* PLACEHOLDERS *------------*
-
-        button_action = QAction(QIcon("gui/icons/target.png"), "Target button", self)
-        button_action.setCheckable(True)
-        button_action.setStatusTip("This is target button")
-        # button_action.triggered.connect(self.toolbar_button_clicked)
-        button_action.setShortcut(QKeySequence("Ctrl+Shift+q"))
-        top_toolbar.addAction(button_action)
-
-        top_toolbar.addSeparator()
-
-        button_action2 = QAction(QIcon("gui/icons/globe.png"), "Globe button", self)
-        button_action2.setCheckable(True)
-        button_action2.setStatusTip("This is globe button")
-        # button_action2.triggered.connect(self.toolbar_button_clicked)
-        button_action2.setShortcut(QKeySequence("Ctrl+q"))
-        top_toolbar.addAction(button_action2)
-
-        # *--------------* PLACEHOLDERS *------------*
+    # def init_toolbar(self):
+    #
+    #     top_toolbar = QToolBar("Top toolbar")
+    #     top_toolbar.setIconSize(QSize(16, 16))
+    #     top_toolbar.setMovable(False)
+    #     top_toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+    #     self.addToolBar(top_toolbar)
+    #
+    #     # *--------------* PLACEHOLDERS *------------*
+    #
+    #     button_action = QAction(QIcon("gui/icons/target.png"), "Target button", self)
+    #     button_action.setCheckable(True)
+    #     button_action.setStatusTip("This is target button")
+    #     # button_action.triggered.connect(self.toolbar_button_clicked)
+    #     button_action.setShortcut(QKeySequence("Ctrl+Shift+q"))
+    #     top_toolbar.addAction(button_action)
+    #
+    #     top_toolbar.addSeparator()
+    #
+    #     button_action2 = QAction(QIcon("gui/icons/globe.png"), "Globe button", self)
+    #     button_action2.setCheckable(True)
+    #     button_action2.setStatusTip("This is globe button")
+    #     # button_action2.triggered.connect(self.toolbar_button_clicked)
+    #     button_action2.setShortcut(QKeySequence("Ctrl+q"))
+    #     top_toolbar.addAction(button_action2)
+    #
+    #     # *--------------* PLACEHOLDERS *------------*
 
 
     def init_list_menu(self):
@@ -138,7 +138,7 @@ class MainWindow(QMainWindow):
 
         sidebar_layout.addStretch()
 
-        dock = QDockWidget("Modules", self)
+        dock = QDockWidget(self)
         dock.setWidget(sidebar)
         dock.setFeatures(QDockWidget.DockWidgetFeature.NoDockWidgetFeatures)
 

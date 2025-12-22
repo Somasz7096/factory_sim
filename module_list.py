@@ -8,7 +8,7 @@ except Exception as e:
 
 modules_list = [
     # ("Button text", icon path, UI, logic)
-    ("Materials", "gui/icons/plus.png", Materials_ui, Materials_logic),
+    ("Materials", "gui/icons/folder.png", Materials_ui, Materials_logic),
     # ("Clock", "gui/icons/address-book-blue.png", Clock),
     # ("Orders", "gui/icons/address-book.png", Orders),
     # ("Warehouse", "gui/icons/address-book-blue.png", Clock),
