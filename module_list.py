@@ -1,14 +1,14 @@
 from gui.clock import Clock
 from gui.orders import Orders
 try:
-    from gui.materials_ui import NewItemUI
-    from modules.materials import NewItem
+    from gui.materials_ui import Materials_ui
+    from modules.materials import Materials_logic
 except Exception as e:
     print(e)
 
 modules_list = [
     # ("Button text", icon path, UI, logic)
-    ("New item", "gui/icons/plus.png", NewItemUI, NewItem),
+    ("Materials", "gui/icons/plus.png", Materials_ui, Materials_logic),
     # ("Clock", "gui/icons/address-book-blue.png", Clock),
     # ("Orders", "gui/icons/address-book.png", Orders),
     # ("Warehouse", "gui/icons/address-book-blue.png", Clock),

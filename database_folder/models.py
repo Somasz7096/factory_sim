@@ -7,7 +7,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class Materials(Base):
+class Materials_db(Base):
     __tablename__ = "Materials"
 
     material_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)

@@ -2,10 +2,10 @@ from PyQt6.QtCore import QObject
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from database_folder.engine import SessionLocal
-from database_folder.models import Materials
+from database_folder.models import Materials_db
 
 
-class NewItem(QObject):
+class Materials_logic(QObject):
     def __init__(self, ui):
         super().__init__()
         self.ui = ui
@@ -16,14 +16,14 @@ class NewItem(QObject):
 
         with SessionLocal(expire_on_commit=False) as session:
             try:
-                #czyści opcjonalną wartość id żeby przypisać ją automatycznie przez sqlalchemy
+                #czyści opcjonalną wartość material_id żeby przypisać ją automatycznie przez sqlalchemy
                 if data["material_id"] == "":
                     data["material_id"] = None
 
                 '''dodaje rekord do tabeli, ** rozpakowuje słownik, 
                     klucze w słowniku muszę być równe nazwie kolumny'''
 
-                new_material = Materials(**data)
+                new_material = Materials_db(**data)
                 session.add(new_material)
 
                 session.flush() # generuje material_id jako primary_key, jeszcze nie commituje

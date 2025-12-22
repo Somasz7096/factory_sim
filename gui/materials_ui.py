@@ -1,13 +1,14 @@
 import time
-from PyQt6.QtCore import Qt, pyqtSignal, QObject
-from PyQt6.QtGui import QColor
-from PyQt6.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame, QLabel, QPushButton, QLineEdit, QGridLayout,
-                             QComboBox, QTabWidget, QGraphicsEffect)
+from PyQt6.QtCore import Qt, pyqtSignal, QObject, QSize
+from PyQt6.QtGui import QColor, QAction, QIcon
+from PyQt6.QtWidgets import (QWidget, QGridLayout, QHBoxLayout, QVBoxLayout, QFrame, QLabel, QPushButton, QLineEdit,
+                             QGridLayout,
+                             QComboBox, QTabWidget, QGraphicsEffect, QToolBar, QSplitter)
 
 from .custom_widgets import LabeledInput
 
 
-class NewItemUI(QWidget):
+class Materials_ui(QWidget):
 
     save_signal = pyqtSignal(dict)
 
@@ -18,12 +19,19 @@ class NewItemUI(QWidget):
         self.inputs = []
         self.initUI()
 
-
     def initUI(self):
+
         # # główna ramka
-        left_frame = QFrame()
-        left_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        left_frame.setStyleSheet("background-color: white;")
+        top_frame = QFrame()
+        top_frame.setFixedHeight(32)
+        top_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        top_frame.setStyleSheet("background-color: white;")
+
+        self.left_frame = QFrame()
+        self.left_frame.setMaximumWidth(600)
+        self.left_frame.setMinimumWidth(200)
+        self.left_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.left_frame.setStyleSheet("background-color: white;")
 
         right_frame = QFrame()
         right_frame.setFrameShape(QFrame.Shape.StyledPanel)
@@ -31,22 +39,62 @@ class NewItemUI(QWidget):
 
 
         # layout ramki głównej
-        full_box = QHBoxLayout()
+        full_box = QVBoxLayout()
         full_box.setContentsMargins(5, 18, 5, 0)
         full_box.setSpacing(5)
         self.setLayout(full_box)
-        full_box.addWidget(left_frame)
-        full_box.addWidget(right_frame)
+
+        full_box.addWidget(top_frame)
 
 
+        top_box = QHBoxLayout(top_frame)
+        top_box.setContentsMargins(0, 0, 0, 0)
 
-        left_box = QVBoxLayout(left_frame)
+        left_box = QVBoxLayout(self.left_frame)
         left_box.setContentsMargins(5, 5, 5, 5)
         left_box.setSpacing(5)
+        self.left_frame.setHidden(True)
 
-        full_box.addLayout(left_box)
+        right_box = QVBoxLayout(right_frame)
+        right_box.addWidget(QLabel("big AF placeholder"))
+        right_box.addStretch()
+
+        splitter = QSplitter(Qt.Orientation.Horizontal)
+        splitter.addWidget(self.left_frame)
+        splitter.addWidget(right_frame)
+        splitter.setSizes([200, 500])
+        splitter.setChildrenCollapsible(False) #blokuje możliwość schowania widgetu
+
+        full_box.addWidget(splitter)
 
 
+
+        # ------------ TOOLBAR -----------------------#
+        top_toolbar = QToolBar("Top toolbar")
+        top_box.addWidget(top_toolbar)
+        top_toolbar.setIconSize(QSize(16, 16))
+        top_toolbar.setMovable(False)
+        top_toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+
+
+        # *--------------* TOOLBAR PLACEHOLDERS *------------*
+
+        button_action = QAction(QIcon("gui/icons/target.png"), "Target button", self)
+        button_action.setStatusTip("This is target button")
+        button_action.triggered.connect(self.add_new)
+        top_toolbar.addAction(button_action)
+
+        top_toolbar.addSeparator()
+
+        button_action2 = QAction(QIcon("gui/icons/globe.png"), "Globe button", self)
+        button_action2.setCheckable(True)
+        button_action2.setStatusTip("This is globe button")
+        top_toolbar.addAction(button_action2)
+
+        # *--------------* TOOLBAR PLACEHOLDERS *------------*
+
+
+        #------------ LEFT BOX -----------------------#
 
         header_label = QLabel("Add new item:")
         left_box.addWidget(header_label)
@@ -94,20 +142,11 @@ class NewItemUI(QWidget):
         save_button.clicked.connect(self._save)
         cancel_button.clicked.connect(self.deleteLater)
 
-        #----------> Error label <-----------------#
+        #----------> Feedback label <-----------------#
         self.feedback_label = QLabel()
         self.feedback_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         left_box.addWidget(self.feedback_label)
         left_box.addStretch()
-
-        right_box = QVBoxLayout(right_frame)
-        full_box.addLayout(right_box)
-        right_box.addWidget(QLabel("big AF placeholder"))
-        right_box.addStretch()
-
-        full_box.setStretch(0,1)
-        full_box.setStretch(1,4)
-
 
     def _save(self):
         if not self._validate_inputs():
@@ -141,3 +180,6 @@ class NewItemUI(QWidget):
 
         for i in self.inputs:
             i.setText("")
+
+    def add_new(self):
+        self.left_frame.show()
