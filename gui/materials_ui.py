@@ -5,20 +5,15 @@ from PyQt6.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame, QLabel, 
                              QComboBox, QTabWidget, QGraphicsEffect)
 
 from .custom_widgets import LabeledInput
-from database_folder.models import Materials
-
 
 
 class NewItemUI(QWidget):
 
-    save_signal = pyqtSignal(list)
-    feedback_signal = pyqtSignal(str)
-
+    save_signal = pyqtSignal(dict)
 
 
     def __init__(self):
         super().__init__()
-        self.combined_data = []
         self.data = {}
         self.inputs = []
         self.initUI()
@@ -117,12 +112,12 @@ class NewItemUI(QWidget):
     def _save(self):
         if not self._validate_inputs():
             return
+        self.data = {} #czyszczenie z nieaktualnych danych
         for i in self.inputs:
             self.data[str(i)] = i.text()
-        self.combined_data.append(Materials)
-        self.combined_data.append(self.data)
-        if self.save_signal.emit(self.combined_data):
-            self._display_confirmation()
+
+        self.save_signal.emit(self.data)
+
 
     def _validate_inputs(self):
         for i in self.inputs:
@@ -130,15 +125,19 @@ class NewItemUI(QWidget):
                 continue
             elif not i.text() or i.text().isspace():
                 self._display_error(i)
-                self.combined_data = []
+                self.data = {}
                 return False
         return True
 
     def _display_error(self, i: LabeledInput):
         i.focus()
-        self.feedback_signal.emit(f"{i} cannot be blank")
+        self.feedback_label.setText(f"{i} cannot be blank")
 
-    def _display_confirmation(self):
-        self.feedback_signal.emit("New material added")
+    def display_confirmation(self, data):
+        message = "New material added:\n\n"
+        for key, value in data.items():
+            message += f"{key}: {value}\n"
+        self.feedback_label.setText(message)
+
         for i in self.inputs:
             i.setText("")

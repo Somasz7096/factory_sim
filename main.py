@@ -209,7 +209,6 @@ class MainWindow(QMainWindow):
 
 
 
-
         # time_layout = QVBoxLayout()
         # time_button = QPushButton("Timer settings")
         # time_layout.addWidget(time_button)
